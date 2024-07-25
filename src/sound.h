@@ -54,7 +54,7 @@ void initMusic()
     prev_music = -1;
 	current_music = -1;
 	select_channel(0);
-	set_channel_volume(0.85);
+	set_channel_volume(0.55);
 }
 
 void stopSound()

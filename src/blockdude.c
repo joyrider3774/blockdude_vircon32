@@ -10,9 +10,6 @@
 #include "stageselectstate.h"
 #include "introstate.h"
 #include "levels.h"
-#include "libs/TextFonts/textfont.h"
-#include "fonts/Roboto_Bold_12.h"
-#include "fonts/Roboto_Bold_32.h"
 #include "debugspeed.h"
 
 CWorldParts* WorldParts;
