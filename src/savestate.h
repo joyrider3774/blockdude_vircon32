@@ -6,12 +6,6 @@
 
 game_signature GameSignature;
 
-#define LevelLockPosition 1000 //in case i ever add any new levels or options
-#define optionMusicPosition (sizeof(game_signature))
-#define optionSoundPosition (optionMusicPosition + sizeof(music_on))
-#define optionSkinPosition (optionSoundPosition + sizeof(sound_on))
-#define optionGameHelpBarPosition (optionSkinPosition + sizeof(skin))
-
 int[MaxLevelPacks] levelLocks = {0,0};
 int musicOn;
 int soundOn;
@@ -19,6 +13,11 @@ int skin;
 int valid;
 int gamehelpbar;
 
+#define LevelLockPosition 1000 //in case i ever add any new levels or options
+#define optionMusicPosition (sizeof(game_signature))
+#define optionSoundPosition (optionMusicPosition + sizeof(music_on))
+#define optionSkinPosition (optionSoundPosition + sizeof(sound_on))
+#define optionGameHelpBarPosition (optionSkinPosition + sizeof(skin))
 
 void loadSaveState(void)
 {
@@ -61,7 +60,7 @@ void saveSaveState(void)
 void validateSaveState(void)
 {
     
-	if ((gamehelpbar  > 1) || (gamehelpbar < 0) || !valid)
+    if ((gamehelpbar  > 1) || (gamehelpbar < 0) || !valid)
 	{
 		valid = 0;
 		gamehelpbar = 1;
@@ -103,6 +102,8 @@ void validateSaveState(void)
 
 void initSaveState(void)
 {
+    memset( &GameSignature, 0, sizeof( game_signature ) );
+    strcpy( GameSignature, "BLOCKDUDE_V1" );
     valid = 1;
     loadSaveState();
     validateSaveState();
