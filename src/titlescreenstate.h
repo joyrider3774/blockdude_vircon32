@@ -349,7 +349,8 @@ void TitleScreen()
 					NeedRedraw = true;
 					break;
 				case opBack:
-					titleStep--;
+					titleStep = tsMainMenu;
+					titleSelection = mmOptions;
 					playMenuBackSound();
 					NeedRedraw = true;
 					break;
