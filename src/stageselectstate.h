@@ -31,6 +31,7 @@ void StageSelect(CWorldParts* WorldParts)
 			i = 0;
 		setSkinSaveState(i);
 		LoadGraphics();
+		CWorldParts_UpdateGraphics(WorldParts);
 		NeedRedraw = true;
 	}
 

@@ -306,6 +306,7 @@ void Game(CWorldParts* WorldParts)
 			if (NeedToReloadGraphics)
 			{
 				LoadGraphics();
+				CWorldParts_UpdateGraphics(WorldParts);
 				NeedToReloadGraphics = false;
 			}
 			drawTexture(IMGBackground, 0, 0, 0);

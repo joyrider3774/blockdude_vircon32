@@ -16,6 +16,7 @@ struct CWorldParts;
 struct CWorldPart;
 
 struct CWorldPart {
+	Texture* Img;
 	CWorldPart* AttachedPart;
 	int MoveDelayCounter;
 	bool FirstArriveEventFired;
@@ -31,11 +32,6 @@ struct CWorldPart {
 	bool NeedToMoveLeft;
 	bool ItemAttached;
 	bool NeedToMoveRight;
-	int PrevDrawPlayFieldX;
-	int PrevDrawPlayFieldY;
-	int PrevDrawX;
-	int PrevDrawY;
-	int PrevDrawAnimPhase;
 	int AnimCounter, AnimBase, AnimDelay, AnimDelayCounter, AnimPhases;
 };
 
@@ -107,14 +103,9 @@ CWorldPart* CWorldPart_create(int PlayFieldXin, int PlayFieldYin, int Typein,  i
 		Result->MoveSpeed = 0;
 		Result->ParentList = NULL;
 		Result->AnimPhase = 0;
-		Result->PrevDrawAnimPhase = 0;
 		Result->Selected = false;
 		Result->FirstArriveEventFired = false;
 		Result->Group = GroupIn;
-		Result->PrevDrawX = -TileWidth;
-		Result->PrevDrawY = -TileHeight;
-		Result->PrevDrawPlayFieldX = -1;
-		Result->PrevDrawPlayFieldY = -1;
 
 
 		if (Typein == IDPlayer)
@@ -130,6 +121,88 @@ CWorldPart* CWorldPart_create(int PlayFieldXin, int PlayFieldYin, int Typein,  i
 		if (Typein == IDBox)
 		{
 			Result->MoveSpeed = GameMoveSpeed;
+		}
+
+		switch (Typein)
+		{
+			case IDEmpty:
+				Result->Img = IMGEmpty;
+				break;
+			case IDBox:
+				Result->Img = IMGBox;
+				break;
+			case IDPlayer:
+				Result->Img = IMGPlayer;
+				break;
+			case IDFloor:
+				Result->Img = IMGFloor;
+				break;
+			case IDExit:
+				Result->Img = IMGExit;
+				break;
+			case IDEarthGrassLeft:
+				Result->Img = IMGEarthGrassLeft;
+				break;
+			case IDEarthGrassRight:
+				Result->Img = IMGEarthGrassRight;
+				break;
+			case IDEarthLeft:
+				Result->Img = IMGEarthLeft;
+				break;
+			case IDEarthMiddle:
+				Result->Img = IMGEarthMiddle;
+				break;
+			case IDEarthRight:
+				Result->Img = IMGEarthRight;
+				break;
+			case IDFloatingFloor:
+				Result->Img = IMGFloatingFloor;
+				break;
+			case IDFloatingFloorLeft:
+				Result->Img = IMGFloatingFloorLeft;
+				break;
+			case IDFloatingFloorMiddle:
+				Result->Img = IMGFloatingFloorMiddle;
+				break;
+			case IDFloatingFloorRight:
+				Result->Img = IMGFloatingFloorRight;
+				break;
+			case IDFloorLeft:
+				Result->Img = IMGFloorLeft;
+				break;
+			case IDFloorRight:
+				Result->Img = IMGFloorRight;
+				break;
+			case IDTower:
+				Result->Img = IMGTower;
+				break;
+			case IDStartTower:
+				Result->Img = IMGStartTower;
+				break;
+			case IDTowerShaft:
+				Result->Img = IMGTowerShaft;
+				break;
+			case IDRoof1:
+				Result->Img = IMGRoof1;
+				break;
+			case IDRoof2:
+				Result->Img = IMGRoof2;
+				break;
+			case IDRoofCornerLeft:
+				Result->Img = IMGRoofCornerLeft;
+				break;
+			case IDRoofCornerRight:
+				Result->Img = IMGRoofCornerRight;
+				break;
+			case IDRoofCornerBoth:
+				Result->Img = IMGRoofCornerBoth;
+				break;
+			case IDRoofDownRight:
+				Result->Img = IMGRoofDownRight;
+				break;
+			case IDRoofDownLeft:
+				Result->Img = IMGRoofDownLeft;
+				break;
 		}
 	}
 	return Result;
@@ -896,92 +969,8 @@ bool CWorldPart_Move(CWorldPart* self)
 
 void CWorldPart_Draw(CWorldPart* self)
 {
-	Texture* Img = NULL;
-
-	switch (self->Type)
-	{
-	case IDEmpty:
-		Img = IMGEmpty;
-		break;
-	case IDBox:
-		Img = IMGBox;
-		break;
-	case IDPlayer:
-		Img = IMGPlayer;
-		break;
-	case IDFloor:
-		Img = IMGFloor;
-		break;
-	case IDExit:
-		Img = IMGExit;
-		break;
-	case IDEarthGrassLeft:
-		Img = IMGEarthGrassLeft;
-		break;
-	case IDEarthGrassRight:
-		Img = IMGEarthGrassRight;
-		break;
-	case IDEarthLeft:
-		Img = IMGEarthLeft;
-		break;
-	case IDEarthMiddle:
-		Img = IMGEarthMiddle;
-		break;
-	case IDEarthRight:
-		Img = IMGEarthRight;
-		break;
-	case IDFloatingFloor:
-		Img = IMGFloatingFloor;
-		break;
-	case IDFloatingFloorLeft:
-		Img = IMGFloatingFloorLeft;
-		break;
-	case IDFloatingFloorMiddle:
-		Img = IMGFloatingFloorMiddle;
-		break;
-	case IDFloatingFloorRight:
-		Img = IMGFloatingFloorRight;
-		break;
-	case IDFloorLeft:
-		Img = IMGFloorLeft;
-		break;
-	case IDFloorRight:
-		Img = IMGFloorRight;
-		break;
-	case IDTower:
-		Img = IMGTower;
-		break;
-	case IDStartTower:
-		Img = IMGStartTower;
-		break;
-	case IDTowerShaft:
-		Img = IMGTowerShaft;
-		break;
-	case IDRoof1:
-		Img = IMGRoof1;
-		break;
-	case IDRoof2:
-		Img = IMGRoof2;
-		break;
-	case IDRoofCornerLeft:
-		Img = IMGRoofCornerLeft;
-		break;
-	case IDRoofCornerRight:
-		Img = IMGRoofCornerRight;
-		break;
-	case IDRoofCornerBoth:
-		Img = IMGRoofCornerBoth;
-		break;
-	case IDRoofDownRight:
-		Img = IMGRoofDownRight;
-		break;
-	case IDRoofDownLeft:
-		Img = IMGRoofDownLeft;
-		break;
-	}
-
 	int x, y;
-	if (Img)
+	if (self->Img)
 	{
 		CWorldPart_Event_BeforeDraw(self);
 
@@ -995,14 +984,8 @@ void CWorldPart_Draw(CWorldPart* self)
 			x = self->X;
 			y = self->Y;
 		}
-	
-		self->PrevDrawPlayFieldX = self->PlayFieldX;
-		self->PrevDrawPlayFieldY = self->PlayFieldY;
-		self->PrevDrawX = x;
-		self->PrevDrawY = y;
-		self->PrevDrawAnimPhase = self->AnimPhase;
 
-		drawTexture(Img, self->AnimPhase, x, y);
+		drawTexture(self->Img, self->AnimPhase, x, y);
 
 	}
 }
@@ -1428,19 +1411,39 @@ int CWorldParts_Draw(CWorldParts* self)
 		numitems = ((endx - startx) * (endy - starty) * (NrOfGroups - 1)) + 1; //there is only 1 player
 		
 		CWorldPart* Part;
-		if (true || (true || (self->ItemCount < numitems)))
+		int x,y;
+		if (true && (self->ItemCount < numitems))
 		{
 			for (int Teller = 0; Teller < self->ItemCount; Teller++)
 			{
 				Part = self->Items[Teller];
-				if (((Part->PlayFieldX >= self->ViewPort->VPMinX) && (Part->PlayFieldX - 1 <= self->ViewPort->VPMaxX) &&
+				if (Part && 
+					((Part->PlayFieldX >= self->ViewPort->VPMinX) && (Part->PlayFieldX - 1 <= self->ViewPort->VPMaxX) &&
 					(Part->PlayFieldY >= self->ViewPort->VPMinY) && (Part->PlayFieldY - 1 <= self->ViewPort->VPMaxY)))
 				{
-					CWorldPart_Draw(Part);
+
+					if (Part->Img)
+					{
+						if(Part->IsMoving)
+							CWorldPart_Event_BeforeDraw(Part);
+
+						if (Part->ParentList)
+						{
+							x = WINDOW_OFFSET + Part->X - Part->ParentList->ViewPort->MinScreenX;
+							y = Part->Y - Part->ParentList->ViewPort->MinScreenY;
+						}
+						else
+						{
+							x = Part->X;
+							y = Part->Y;
+						}
+						
+						drawTexture(Part->Img, Part->AnimPhase, x, y);
+
+					}
+					//CWorldPart_Draw(Part);
 					self->DrawCount++;
 				}
-				Part->PrevDrawPlayFieldX = Part->PlayFieldX;
-				Part->PrevDrawPlayFieldY = Part->PlayFieldY;
 			}
 		}
 		else
@@ -1456,8 +1459,6 @@ int CWorldParts_Draw(CWorldParts* self)
 						{
 							CWorldPart_Draw(Part);
 							self->DrawCount++;
-							Part->PrevDrawPlayFieldX = Part->PlayFieldX;
-							Part->PrevDrawPlayFieldY = Part->PlayFieldY;
 						}
 
 						Part = self->PositionalItems[GroupFloor][y][x];
@@ -1465,8 +1466,6 @@ int CWorldParts_Draw(CWorldParts* self)
 						{
 							CWorldPart_Draw(Part);
 							self->DrawCount++;
-							Part->PrevDrawPlayFieldX = Part->PlayFieldX;
-							Part->PrevDrawPlayFieldY = Part->PlayFieldY;
 						}
 
 						Part = self->PositionalItems[GroupBox][y][x];
@@ -1474,8 +1473,6 @@ int CWorldParts_Draw(CWorldParts* self)
 						{
 							CWorldPart_Draw(Part);
 							self->DrawCount++;
-							Part->PrevDrawPlayFieldX = Part->PlayFieldX;
-							Part->PrevDrawPlayFieldY = Part->PlayFieldY;
 						}
 					}
 				}
@@ -1485,8 +1482,6 @@ int CWorldParts_Draw(CWorldParts* self)
 				{
 					CWorldPart_Draw(self->Player);
 					self->DrawCount++;
-					self->Player->PrevDrawPlayFieldX = self->Player->PlayFieldX;
-					self->Player->PrevDrawPlayFieldY = self->Player->PlayFieldY;
 				}
 
 			
@@ -1523,6 +1518,97 @@ int CWorldParts_TypeAtPosition(CWorldParts* self, int PlayFieldXin, int PlayFiel
 	}
 
 	return 0;
+}
+
+void CWorldParts_UpdateGraphics(CWorldParts* self)
+{
+	for (int Teller = 0; Teller < self->ItemCount; Teller++)
+	{
+		if(self->Items[Teller])
+		{
+			switch (self->Items[Teller]->Type)
+			{
+				case IDEmpty:
+					self->Items[Teller]->Img = IMGEmpty;
+					break;
+				case IDBox:
+					self->Items[Teller]->Img = IMGBox;
+					break;
+				case IDPlayer:
+					self->Items[Teller]->Img = IMGPlayer;
+					break;
+				case IDFloor:
+					self->Items[Teller]->Img = IMGFloor;
+					break;
+				case IDExit:
+					self->Items[Teller]->Img = IMGExit;
+					break;
+				case IDEarthGrassLeft:
+					self->Items[Teller]->Img = IMGEarthGrassLeft;
+					break;
+				case IDEarthGrassRight:
+					self->Items[Teller]->Img = IMGEarthGrassRight;
+					break;
+				case IDEarthLeft:
+					self->Items[Teller]->Img = IMGEarthLeft;
+					break;
+				case IDEarthMiddle:
+					self->Items[Teller]->Img = IMGEarthMiddle;
+					break;
+				case IDEarthRight:
+					self->Items[Teller]->Img = IMGEarthRight;
+					break;
+				case IDFloatingFloor:
+					self->Items[Teller]->Img = IMGFloatingFloor;
+					break;
+				case IDFloatingFloorLeft:
+					self->Items[Teller]->Img = IMGFloatingFloorLeft;
+					break;
+				case IDFloatingFloorMiddle:
+					self->Items[Teller]->Img = IMGFloatingFloorMiddle;
+					break;
+				case IDFloatingFloorRight:
+					self->Items[Teller]->Img = IMGFloatingFloorRight;
+					break;
+				case IDFloorLeft:
+					self->Items[Teller]->Img = IMGFloorLeft;
+					break;
+				case IDFloorRight:
+					self->Items[Teller]->Img = IMGFloorRight;
+					break;
+				case IDTower:
+					self->Items[Teller]->Img = IMGTower;
+					break;
+				case IDStartTower:
+					self->Items[Teller]->Img = IMGStartTower;
+					break;
+				case IDTowerShaft:
+					self->Items[Teller]->Img = IMGTowerShaft;
+					break;
+				case IDRoof1:
+					self->Items[Teller]->Img = IMGRoof1;
+					break;
+				case IDRoof2:
+					self->Items[Teller]->Img = IMGRoof2;
+					break;
+				case IDRoofCornerLeft:
+					self->Items[Teller]->Img = IMGRoofCornerLeft;
+					break;
+				case IDRoofCornerRight:
+					self->Items[Teller]->Img = IMGRoofCornerRight;
+					break;
+				case IDRoofCornerBoth:
+					self->Items[Teller]->Img = IMGRoofCornerBoth;
+					break;
+				case IDRoofDownRight:
+					self->Items[Teller]->Img = IMGRoofDownRight;
+					break;
+				case IDRoofDownLeft:
+					self->Items[Teller]->Img = IMGRoofDownLeft;
+					break;
+			}
+		}
+	}
 }
 
 void CWorldParts_deinit(CWorldParts* self)
